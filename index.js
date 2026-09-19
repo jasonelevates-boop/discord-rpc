@@ -1,21 +1,24 @@
-const RPC = require("discord-rpc");
-const client = new RPC.Client({ transport: "ipc" });
+const { Client } = require('discord-rpc');
+const express = require('express');
 
-// This keeps the script alive on the cloud server
-const express = require("express");
 const app = express();
-app.get("/", (req, res) => res.send("RPC is running 24/7!"));
+app.get('/', (req, res) => res.send('RPC 24/7 is running!'));
 app.listen(process.env.PORT || 3000);
 
-client.on("ready", () => {
-    console.log("Fake activity is now online 24/7!");
-    client.setActivity({
-        details: "Playing solo", // You can change this text
-        state: "In-game",       // You can change this text
-        startTimestamp: 1788719126000, // Your 314-hour start time
+// Paste your Discord Application ID here inside the quotes
+const CLIENT_ID = 'YOUR_APPLICATION_ID_HERE'; 
+
+const rpc = new Client({ transport: 'ipc' });
+
+rpc.on('ready', () => {
+    console.log('24/7 fake status is online!');
+    rpc.setActivity({
+        details: 'Playing solo',
+        state: 'In-game',
+        startTimestamp: 1788719126000, // Your 314-hour timestamp
         instance: false,
     });
 });
 
-// Cloud hosting uses token environment variables to log into your account securely
-client.login({ clientId: "YOUR_APPLICATION_ID_HERE" }).catch(console.error);
+// The cloud server will use a secure token variable to handle the connection
+rpc.login({ clientId: CLIENT_ID, token: process.env.DISCORD_TOKEN }).catch(console.error);
